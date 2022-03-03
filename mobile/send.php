@@ -73,7 +73,8 @@ if (logged_in()) {
     echo "<h2>Send TLO</h2><br>";
     echo "<form action='send.php' method='post'>";
     echo "<table class='send'>";
-    echo "<tr><th>Recipient address:</th><td><input type='text' maxlength='97' required pattern='TA[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{95}' name='recipient'></td>";
+    echo "<script src='/getaddress.js'></script>";
+    echo "<tr><th>Recipient address:</th><td><input type='text' maxlength='97' required pattern='TA[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{95}' name='recipient' oninvalid='javascript:getaddress(this);' onfocusout='javascript:getaddress(this);'></td>";
     echo "<td rowspan='4'><span id='scan'><a class='button' onclick='scanQR(&apos;recipient&apos;);' href='javascript:return false;'>Scan QR code</a><br>Cameras: <span id='cameras'>None</span></span></td>";
     echo "<td rowspan='5'><video id='preview' style='display: none;'></video></td></tr>";
     echo "<tr><th>Amount:</th><td><input type='number' min='0.01' max='" . number_format($maxAmount / 100, 2) . "' step='0.01' name='amount' value='0.01'></td><td></td></tr>";

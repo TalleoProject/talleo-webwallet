@@ -31,6 +31,14 @@ function get_address($spendKey) {
   return $arr["address"];
 }
 
+function get_address_with_email($email) {
+  global $db;
+  open_database();
+  $result = $db->query("SELECT address FROM users WHERE emailAddress = '" . $email . "';");
+  $arr = $result->fetchArray();
+  return $arr["address"];
+}
+
 function get_authcode($spendKey) {
   global $db;
   open_database();
