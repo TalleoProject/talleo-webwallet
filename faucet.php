@@ -137,7 +137,7 @@ if (logged_in()) {
           faucet_update_ip($_SERVER['REMOTE_ADDR']);
         }
       }
-    } else {
+    } else if ($address != $faucetWallet) {
       echo "<a class='button' href='faucet.php?claim=yes'>Claim</a>";
     }
   } else {
