@@ -1,10 +1,21 @@
 <?php
 //echo "Entering lib/daemon.php<br>";
+
+function make_url($host, $port, $path, $ssl) {
+  $url = "http";
+  if ($ssl) {
+    $url = "https";
+  }
+  $url .= "://" . $host . ":" . $port . $path;
+  return $url;
+}
+
 function daemonrpc_get($path) {
-  global $daemonHost, $daemonPort;
+  global $daemonHost, $daemonPort, $daemonSSL;
+  $url = make_url($daemonHost, $daemonPort, $path, $daemonSSL);
   $curl = curl_init();
   curl_setopt_array($curl, array(
-    CURLOPT_URL => "http://" . $daemonHost . ":" . $daemonPort . $path,
+    CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
@@ -22,10 +33,11 @@ function daemonrpc_get($path) {
 }
 
 function walletrpc_post($method, $params = NULL) {
-  global $walletHost, $walletPort, $walletPassword;
+  global $walletHost, $walletPort, $walletSSL, $walletPassword;
   if (is_null($params)) {
     $params = (Object) Array();
   }
+  $url = make_url($walletHost, $walletPort, "/json_rpc", $walletSSL);
   $curl = curl_init();
   $fields = array("jsonrpc" => "2.0",
                   "method" => $method,
@@ -34,7 +46,7 @@ function walletrpc_post($method, $params = NULL) {
                   "id" => "1");
   $fields = json_encode((object) $fields);
   curl_setopt_array($curl, array(
-    CURLOPT_URL => "http://" . $walletHost . ":" . $walletPort . "/json_rpc",
+    CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
