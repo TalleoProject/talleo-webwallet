@@ -24,6 +24,22 @@ if (!validate_email($email)) {
    exit();
 }
 if (!email_registered($email)) {
+   $key = str_replace("@", ".", $email);
+   $entries = dns_get_record($key, DNS_TXT);
+   if ($entries != false) {
+      foreach ($entries as &$entry) {
+         $entries2 = $entry["entries"];
+         foreach ($entries2 as &$entry2) {
+            if (substr($entry2, 0, 7) == "talleo:") {
+               $address = substr($entry2, 7);
+               if (validate_address($address)) {
+                  echo '{"address": "' . $address . '"}';
+                  exit();
+               }
+            }
+         }
+      }
+   }
    echo '{"error": "E-mail address is not registered!"}';
    exit();
 }
