@@ -44,7 +44,9 @@ function validate_txhash($txhash) {
 
 function validate_email($email) {
   $valid1 = "0123456789abcdefghijklmnopqrstuvwxyz.-+_";
-  $valid2 = "0123456789abcdefghijklmnopqrstuvwxyz.";
+  $valid2 = "0123456789abcdefghijklmnopqrstuvwxyz.-";
+  $numbers = "0123456789";
+  $nonzero = "123456789";
   $at = strpos($email, '@');
   if ($at === false) {
     return false;
@@ -60,6 +62,39 @@ function validate_email($email) {
   for ($i = 0; $i < strlen($user); $i++) {
     if (strpos($valid1, $user{$i}) === false) {
       return false;
+    }
+  }
+  $dot = strpos($domain, ".");
+  if ($dot === false) {
+    return false;
+  }
+  // last segment of domain must have atleast two characters or a non-zero number
+  if ($dot == (strlen($domain) - 2) && strpos($nonzero, $domain[-1]) === false) {
+    return false;
+  }
+  if ($dot == (strlen($domain) - 1)) {
+    return false;
+  }
+  // Segment can't be empty
+  if (strpos($domain, "..") !== false) {
+    return false;
+  }
+  // IP address?
+  if (strpos($numbers, $domain[-1]) !== false) {
+    if (substr_count($domain, ".") != 3) {
+      return false;
+    }
+    $tok = strtok($domain, ".");
+    while ($tok !== false) {
+      for ($i = 0; $i < strlen($tok); $i++) {
+        if (strpos($numbers, $tok[$i]) === false) {
+          return false;
+        }
+      }
+      if (intval($tok) > 255) {
+        return false;
+      }
+      $tok = strtok(".");
     }
   }
   for ($i = 0; $i < strlen($domain); $i++) {
