@@ -48,8 +48,8 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance->availableBalance;
-  $lockedBalance = $getBalance->lockedAmount;
+  $availableBalance = $getBalance["availableBalance"];
+  $lockedBalance = $getBalance["lockedAmount"];
   require("lib/menu.php");
   if (!isset($_POST['recipient']) || !isset($_POST['amount'])) {
     echo "<div id='wallet'>Address:&nbsp;", $address, "</div><br>";
@@ -59,7 +59,7 @@ if (logged_in()) {
     $maxAmount = $availableBalance - 1;
     $getFeeAddress = daemonrpc_get("/feeaddress");
     if (array_key_exists('fee_address', $getFeeAddress)) {
-      $feeAddress = $getFeeAddress->fee_address;
+      $feeAddress = $getFeeAddress["fee_address"];
       if (validate_address($feeAddress)) {
         $feeAmount = min(1, max(floatval($maxAmount) / 40001, 100));
         $maxAmount -= $feeAmount;
@@ -116,7 +116,7 @@ if (logged_in()) {
     //
     $getFeeAddress = daemonrpc_get("/feeaddress");
     if (array_key_exists('fee_address', $getFeeAddress)) {
-      $feeAddress = $getFeeAddress->fee_address;
+      $feeAddress = $getFeeAddress["fee_address"];
     }
     if (validate_address($feeAddress)) {
       $feeAmount = min(0.01, max(floatval($amount) / 40000, 1.00));
@@ -183,27 +183,27 @@ if (logged_in()) {
         exit();
       }
       if (array_key_exists('error', $result)) {
-        if (array_key_exists('message', $result->error)) {
-          if ($result->error->message == 'Wrong amount') {
+        if (array_key_exists('message', $result["error"])) {
+          if ($result["error"]["message"] == 'Wrong amount') {
             echo "<span class='error'>Sending failed because there was not enough unlocked balance, available balance ", number_format($availableBalance / 100, 2), " TLO!</span></div></body></html>";
             exit();
-          } else if ($result->error->message == 'Transaction size is too big') {
+          } else if ($result["error"]["message"] == 'Transaction size is too big') {
             echo "<span class='error'>Sending failed because you don't have enough large inputs. Please <a href='info.php'>optimize</a> your wallet.</span></div></body></html>";
             exit();
-          } else if ($result->error->message == 'Sum overflow') {
+          } else if ($result["error"]["message"] == 'Sum overflow') {
             echo "<span class='error'>Sending failed because the transfer amount is too large.</span></div></body></html>";
             exit();
           } else {
-            echo "<span class='error'>Sending failed because of error '", $result->error->message, "'!</span></div></body></html>";
+            echo "<span class='error'>Sending failed because of error '", $result["error"]["message"], "'!</span></div></body></html>";
             exit();
           }
         }
       }
       if (array_key_exists('transactionHash', $result)) {
-        echo "Transaction sent with hash ", $result->transactionHash, "<br>";
+        echo "Transaction sent with hash ", $result["transactionHash"], "<br>";
         echo "<a href='send.php'>Return to webwallet</a><br>";
         if (isset($_POST['callback'])) {
-           callback_post($_POST['callback'], [ 'address' => $recipient, 'paymentId' => $paymentID, 'transactionHash' => $result->transactionHash ]);
+           callback_post($_POST['callback'], [ 'address' => $recipient, 'paymentId' => $paymentID, 'transactionHash' => $result["transactionHash"] ]);
         }
       }
     }

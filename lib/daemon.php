@@ -28,7 +28,7 @@ function daemonrpc_get($path) {
   $response = curl_exec($curl);
   $err = curl_error($curl);
   curl_close($curl);
-  $response = json_decode($response);
+  $response = json_decode($response, true);
   return $response;
 }
 
@@ -61,9 +61,9 @@ function walletrpc_post($method, $params = NULL) {
   $err = curl_error($curl);
 
   curl_close($curl);
-  $response = json_decode($response);
+  $response = json_decode($response, true);
   if ($response && array_key_exists('result', $response)) {
-    return $response->result;
+    return $response["result"];
   } else {
     return $response;
   }
@@ -72,11 +72,12 @@ function walletrpc_post($method, $params = NULL) {
 function callback_post($url, $params) {
   $fields = http_build_query($params);
 
+  $curl = curl_init();
+
   if (!validate_url($url)) {
     return false;
   }
 
-  $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => true,
@@ -102,10 +103,10 @@ function get_amount($address, $hash) {
   $params = Array();
   $params['transactionHash'] = $hash;
   $result = walletrpc_post('getTransaction', $params);
-  $tx = $result->transaction;
-  foreach ($tx->transfers as $transfer) {
-    if ($transfer->address == $address) {
-      $total += $transfer->amount;
+  $tx = $result["transaction"];
+  foreach ($tx["transfers"] as $transfer) {
+    if ($transfer["address"] == $address) {
+      $total += $transfer["amount"];
     }
   }
   return $total;

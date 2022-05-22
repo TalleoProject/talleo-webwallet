@@ -48,8 +48,8 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance->availableBalance;
-  $lockedBalance = $getBalance->lockedAmount;
+  $availableBalance = $getBalance["availableBalance"];
+  $lockedBalance = $getBalance["lockedAmount"];
   require("lib/menu.php");
   $action = 'viewall';
   if (isset($_POST['action'])) {
@@ -158,7 +158,7 @@ if (logged_in()) {
     $maxAmount = $availableBalance - 1;
     $getFeeAddress = daemonrpc_get("/feeaddress");
     if (array_key_exists('fee_address', $getFeeAddress)) {
-      $feeAddress = $getFeeAddress->fee_address;
+      $feeAddress = $getFeeAddress["fee_address"];
       if (validate_address($feeAddress)) {
         $feeAmount = min(1, max(floatval($maxAmount) / 40001, 100));
         $maxAmount -= $feeAmount;

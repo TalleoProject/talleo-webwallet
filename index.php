@@ -46,15 +46,15 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance->availableBalance;
-  $lockedBalance = $getBalance->lockedAmount;
+  $availableBalance = $getBalance["availableBalance"];
+  $lockedBalance = $getBalance["lockedAmount"];
   require("lib/menu.php");
   echo "<div id='wallet'>Address:&nbsp;", $address, "</div><br>";
   echo "<div id='qr'><img src='qr.php'></div>";
   echo "<div id='content'>";
   //
   $info = daemonrpc_get("/getinfo");
-  $height = $info->height;
+  $height = $info["height"];
   //
   $WalletTransactionState = Array("Succeeded", "Failed", "Cancelled", "Created", "Deleted");
   $WalletTransferType = Array("Usual", "Donation", "Change");
@@ -72,28 +72,28 @@ if (logged_in()) {
       echo "<span class='error'>Transaction hash not found in blockchain!</span></div></body></html>";
       exit();
     }
-    $tx = $result->transaction;
+    $tx = $result["transaction"];
     echo "<h3>Transaction " . $hash . "</h3>";
     echo "<table id='transaction'>";
     echo "<tr><th>Amount</th><td>" . number_format(get_amount($address, $hash) / 100, 2) . " TLO</td></tr>";
-    echo "<tr><th>Block</th><td>" . $tx->blockIndex . "</td></tr>";
-    echo "<tr><th>Fee</th><td>" . number_format($tx->fee / 100, 2) . " TLO</td></tr>";
-    echo "<tr><th>Type</th><td>" . ($tx->isBase ? "Coinbase" : "Key output") . "</td></tr>";
-    if (strlen($tx->paymentId) > 0) {
-      echo "<tr><th>Payment ID</th><td>" . $tx->paymentID . "</td></tr>";
+    echo "<tr><th>Block</th><td>" . $tx["blockIndex"] . "</td></tr>";
+    echo "<tr><th>Fee</th><td>" . number_format($tx["fee"] / 100, 2) . " TLO</td></tr>";
+    echo "<tr><th>Type</th><td>" . ($tx["isBase"] ? "Coinbase" : "Key output") . "</td></tr>";
+    if (strlen($tx["paymentId"]) > 0) {
+      echo "<tr><th>Payment ID</th><td>" . $tx["paymentID"] . "</td></tr>";
     }
-    echo "<tr><th>State</th><td>" . $WalletTransactionState[$tx->state] . "</td></tr>";
-    echo "<tr><th>Time</th><td>" . date("D, d M y H:i:s", $tx->timestamp) . "</td></tr>";
+    echo "<tr><th>State</th><td>" . $WalletTransactionState[$tx["state"]] . "</td></tr>";
+    echo "<tr><th>Time</th><td>" . date("D, d M y H:i:s", $tx["timestamp"]) . "</td></tr>";
     echo "</table>";
     echo "<h3>Transfers</h3>";
     echo "<div class='hscroll'>";
     echo "<table id='transfers'>";
     echo "<tr><th>Address</th><th>Amount</th><th>Type</th></tr>";
-    foreach ($tx->transfers as $transfer) {
+    foreach ($tx["transfers"] as $transfer) {
       echo "<tr>";
-      echo "<td>" . $transfer->address . "</td>";
-      echo "<td>" . number_format($transfer->amount / 100, 2) . " TLO</td>";
-      echo "<td>" . $WalletTransferType[$transfer->type] . "</td>";
+      echo "<td>" . $transfer["address"] . "</td>";
+      echo "<td>" . number_format($transfer["amount"] / 100, 2) . " TLO</td>";
+      echo "<td>" . $WalletTransferType[$transfer["type"]] . "</td>";
       echo "</tr>";
     }
     echo "</table>";
@@ -104,7 +104,7 @@ if (logged_in()) {
     $addresses[0] = $address;
     $txhashes_params = Array("addresses" => $addresses, "firstBlockIndex" => 0, "blockCount" => $height);
     $txhashes = walletrpc_post("getTransactionHashes", $txhashes_params);
-    $blocks = $txhashes->items;
+    $blocks = $txhashes["items"];
     echo "<h2>Transactions</h2>";
     echo "<div class='hscroll'>";
     echo "<table id='transactions'>";
@@ -117,21 +117,21 @@ if (logged_in()) {
     // List transactions in reverse order, from newest to oldest
     for ($i = count($blocks) - 1; $i >= 0; $i--) {
       $block = $blocks[$i];
-      $transactionHashes = $block->transactionHashes;
+      $transactionHashes = $block["transactionHashes"];
       for ($j = count($transactionHashes) - 1; $j >= 0; $j--) {
         $transactionHash = $transactionHashes[$j];
         $tx_params = Array("transactionHash" => $transactionHash);
         $tx = walletrpc_post("getTransaction", $tx_params);
         if ($tx) {
-          $transaction = $tx->transaction;
-          if ($transaction->amount != 0) {
+          $transaction = $tx["transaction"];
+          if ($transaction["amount"] != 0) {
             if ($ntrans >= $skip && $ntrans < $skip + 20) {
               echo "<tr>";
-              echo "<td>" . $WalletTransactionState[$transaction->state] . "</td>";
-              echo "<td><a href='?hash=" . $transaction->transactionHash . "'>" . $transaction->transactionHash . "</a></td>";
-              echo "<td>" . date("D, d M y H:i:s", $transaction->timestamp) . "</td>";
-              echo "<td>" . number_format(get_amount($address, $transaction->transactionHash) / 100, 2) . "</td>";
-              echo "<td>" . $transaction->paymentId . "</td>";
+              echo "<td>" . $WalletTransactionState[$transaction["state"]] . "</td>";
+              echo "<td><a href='?hash=" . $transaction["transactionHash"] . "'>" . $transaction["transactionHash"] . "</a></td>";
+              echo "<td>" . date("D, d M y H:i:s", $transaction["timestamp"]) . "</td>";
+              echo "<td>" . number_format(get_amount($address, $transaction["transactionHash"]) / 100, 2) . "</td>";
+              echo "<td>" . $transaction["paymentId"] . "</td>";
               echo "</tr>";
             }
             $ntrans++;

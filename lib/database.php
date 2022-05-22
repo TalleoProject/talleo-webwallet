@@ -94,7 +94,7 @@ function get_spendkey_with_address($address) {
   $params = Array();
   $params["address"] = $address;
   $getSpendKeys = walletrpc_post("getSpendKeys", $params);
-  $spendKey = $getSpendKeys->spendSecretKey;
+  $spendKey = $getSpendKeys['spendSecretKey'];
   return $spendKey;
 }
 
@@ -118,10 +118,10 @@ function check_database() {
   if ($arr["count(*)"] == 0) {
 //  echo "Importing users from wallet daemon...<br>";
     $getViewKey = walletrpc_post("getViewKey");
-    $viewKey = $getViewKey->viewSecretKey;
+    $viewKey = $getViewKey['viewSecretKey'];
 //  echo "View key: ", $viewKey, "<br>";
     $getAddresses = walletrpc_post("getAddresses");
-    $addresses = $getAddresses->addresses;
+    $addresses = $getAddresses['addresses'];
 //  echo "Found ", count($addresses), " wallets...<br>";
     foreach ($addresses as $address) {
 //    echo "Importing ", $address, "...<br>";
@@ -173,7 +173,7 @@ function check_database() {
 function generate_wallet_with_email($email) {
   global $db;
   $generateWallet = walletrpc_post("createAddress");
-  $address = $generateWallet->address;
+  $address = $generateWallet['address'];
   if (validate_address($address)) {
     $spendKey = get_spendkey_with_address($address);
     //echo "Generated wallet with spend key ", $spendKey, " and address ", $address, "<br>";

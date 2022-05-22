@@ -45,8 +45,8 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance->availableBalance;
-  $lockedBalance = $getBalance->lockedAmount;
+  $availableBalance = $getBalance["availableBalance"];
+  $lockedBalance = $getBalance["lockedAmount"];
   require("lib/menu.php");
   echo "<div id='wallet'>Address:&nbsp;", $address, "</div><br>";
   echo "<div id='qr'><img src='qr.php'></div>";
@@ -67,7 +67,7 @@ if (logged_in()) {
     $result = walletrpc_post('sendFusionTransaction', $params);
 //  var_dump($result);
     if (array_key_exists('transactionHash', $result)) {
-      echo "Fusion transaction sent with hash ", $result->transactionHash, ".<br>";
+      echo "Fusion transaction sent with hash ", $result["transactionHash"], ".<br>";
     } else {
       echo "<span class='error'>Sending fusion transaction failed!</span><br>";
     }
@@ -158,12 +158,12 @@ if (logged_in()) {
   $params['addresses'] = $sourceAddresses;
   $result = walletrpc_post('estimateFusion', $params);
   if (array_key_exists('fusionReadyCount', $result)) {
-    echo $result->fusionReadyCount, " output(s) ready for fusion transaction.<br>";
+    echo $result["fusionReadyCount"], " output(s) ready for fusion transaction.<br>";
   }
   if (array_key_exists('totalOutputCount', $result)) {
-    echo $result->totalOutputCount, " output(s) found in wallet.<br>";
+    echo $result["totalOutputCount"], " output(s) found in wallet.<br>";
   }
-  if ($result->fusionReadyCount > 0) {
+  if ($result["fusionReadyCount"] > 0) {
     echo "<form action='info.php' method='post'>";
     echo "<input type='hidden' name='threshold' value='", $threshold, "'>";
     echo "<input type='submit' name='optimize' class='btn' value='Optimize wallet'>";
@@ -175,14 +175,14 @@ if (logged_in()) {
   $params['address'] = $address;
   $result = walletrpc_post('getMnemonicSeed', $params);
   $getViewKey = walletrpc_post('getViewKey');
-  $viewKey = $getViewKey->viewSecretKey;
+  $viewKey = $getViewKey["viewSecretKey"];
   if ($result === NULL) {
     echo "<span class='error'>Internal server error, contact web wallet admin!</span></div></div></body></html>";
     exit();
   }
   echo "<table id='info'>";
   if (array_key_exists('mnemonicSeed', $result)) {
-    echo "<tr><th>Mnemonic seed:</th><td>", $result->mnemonicSeed, "</td></tr>";
+    echo "<tr><th>Mnemonic seed:</th><td>", $result["mnemonicSeed"], "</td></tr>";
   }
   echo "<tr><th>View key:</th><td>", $viewKey, "</td></tr>";
   echo "<tr><th>Spend key:</th><td>", $spendKey, "</td></tr>";
