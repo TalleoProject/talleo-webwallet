@@ -72,12 +72,11 @@ function walletrpc_post($method, $params = NULL) {
 function callback_post($url, $params) {
   $fields = http_build_query($params);
 
-  $curl = curl_init();
-
   if (!validate_url($url)) {
     return false;
   }
 
+  $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => true,
