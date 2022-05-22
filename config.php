@@ -1,4 +1,5 @@
 <?php
+$dbPath = "/webwallet/data/db/database.db";
 $daemonHost = "127.0.0.1";
 $daemonPort = 33889;
 $daemonSSL = false;

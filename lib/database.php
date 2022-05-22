@@ -3,9 +3,9 @@
 $db = NULL;
 
 function open_database() {
-  global $db;
+  global $db, $dbPath;
   if ($db === NULL) {
-    $db = new SQLite3('/webwallet/data/db/database.db', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+    $db = new SQLite3($dbPath, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
   }
 }
 
