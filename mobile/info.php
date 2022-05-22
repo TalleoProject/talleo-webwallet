@@ -174,8 +174,21 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $result = walletrpc_post('getMnemonicSeed', $params);
-  $getViewKey = walletrpc_post('getViewKey');
-  $viewKey = $getViewKey["viewSecretKey"];
+  $viewPublicKey = "";
+  $viewPrivateKey = "";
+  $getViewKeys = walletrpc_post('getViewKeys', $params);
+  if (array_key_exists('viewSecretKey', $getViewKeys)) {
+    $viewPublicKey = $getViewKeys["viewPublicKey"];
+    $viewSecretKey = $getViewKeys["viewSecretKey"];
+  } else {
+    $getViewKey = walletrpc_post('getViewKey');
+    $viewSecretKey = $getViewKey["viewSecretKey"];
+  }
+  $spendPublicKey = "";
+  $getSpendKeys = walletrpc_post('getSpendKeys', $params);
+  if (array_key_exists('spendPublicKey', $getSpendKeys)) {
+    $spendPublicKey = $getSpendKeys["spendPublicKey"];
+  }
   if ($result === NULL) {
     echo "<span class='error'>Internal server error, contact web wallet admin!</span></div></div></body></html>";
     exit();
@@ -184,8 +197,11 @@ if (logged_in()) {
   if (array_key_exists('mnemonicSeed', $result)) {
     echo "<tr><th>Mnemonic seed:</th><td>", $result["mnemonicSeed"], "</td></tr>";
   }
-  echo "<tr><th>View key:</th><td>", $viewKey, "</td></tr>";
+  echo "<tr><th>View key:</th><td>", $viewSecretKey, "</td></tr>";
   echo "<tr><th>Spend key:</th><td>", $spendKey, "</td></tr>";
+  if ($viewPublicKey !== '' && $spendPublicKey !== '') {
+    echo '<tr><th valign="top">GUI import key:</th><td>', $spendPublicKey, '<br />', $viewPublicKey, '<br />', $spendKey, '<br />', $viewSecretKey, '</td></tr>';
+  }
   echo "</table>";
   echo "<br><h3>E-mail change</h3>";
   echo "<form action='info.php' method='post'>";
