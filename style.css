@@ -177,6 +177,11 @@ table.send td {
   text-align: right !important;
 }
 
+table.send input#recipient,
+table.send input#recipient_email {
+  text-align: right !important;
+}
+
 table.send td.submit {
   text-align: center !important;
 }
