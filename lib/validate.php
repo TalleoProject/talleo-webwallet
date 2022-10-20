@@ -47,6 +47,10 @@ function validate_email($email) {
   $valid2 = "0123456789abcdefghijklmnopqrstuvwxyz.-";
   $numbers = "0123456789";
   $nonzero = "123456789";
+  // This is placeholder address for user to enter a real e-mail address, so reject it
+  if ($email == "youremail@domain.com") {
+    return false;
+  }
   $at = strpos($email, '@');
   if ($at === false) {
     return false;
