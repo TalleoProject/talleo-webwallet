@@ -50,6 +50,9 @@ if (logged_in()) {
   $getBalance = walletrpc_post("getBalance", $params);
   $availableBalance = $getBalance["availableBalance"];
   $lockedBalance = $getBalance["lockedAmount"];
+  $getStatus = walletrpc_post("getStatus");
+  $blockCount = $getStatus["blockCount"];
+  $knownBlockCount = $getStatus["knownBlockCount"];
   require("lib/menu.php");
   if (!isset($_POST['recipient']) || !isset($_POST['amount'])) {
     echo "<div id='wallet'>Address:&nbsp;", $address, "</div><br>";

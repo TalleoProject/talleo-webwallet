@@ -50,6 +50,9 @@ if (logged_in()) {
   $getBalance = walletrpc_post("getBalance", $params);
   $availableBalance = $getBalance["availableBalance"];
   $lockedBalance = $getBalance["lockedAmount"];
+  $getStatus = walletrpc_post("getStatus");
+  $blockCount = $getStatus["blockCount"];
+  $knownBlockCount = $getStatus["knownBlockCount"];
   require("../lib/menu.php");
   $action = 'viewall';
   if (isset($_POST['action'])) {

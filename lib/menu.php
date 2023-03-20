@@ -13,6 +13,12 @@
   echo "<a href='info.php'>Wallet info</a><br>";
   echo "<a href='faucet.php'>Faucet</a><br>";
   echo "<a href='logout.php'>Logout</a><br>";
+  echo "<hr>";
+  echo "<p class='sync'>";
+  echo "<label for='sync'>Sync status:</label><br>";
+  $syncPercent = number_format($blockCount / $knownBlockCount * 100, 2);
+  echo "<progress id='sync' value='" . $blockCount . "' max='" . $knownBlockCount . "' title='" . $syncPercent . " %'>" . $syncPercent . " %</progress><br/>";
+  echo "</p><br>";
   $dt = date("Y");
   echo "<p class='footer'>&copy; ", $dt != "2018" ? "2018&ndash;" : "", date("Y"), " Talleo Project</p>";
   echo "</div>";

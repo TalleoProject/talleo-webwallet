@@ -48,6 +48,9 @@ if (logged_in()) {
   $getBalance = walletrpc_post("getBalance", $params);
   $availableBalance = $getBalance["availableBalance"];
   $lockedBalance = $getBalance["lockedAmount"];
+  $getStatus = walletrpc_post("getStatus");
+  $blockCount = $getStatus["blockCount"];
+  $knownBlockCount = $getStatus["knownBlockCount"];
   require("lib/menu.php");
   echo "<div id='wallet'>Address:&nbsp;", $address, "</div><br>";
   echo "<div id='qr'><img src='qr.php'></div>";
