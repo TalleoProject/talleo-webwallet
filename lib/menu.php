@@ -1,7 +1,7 @@
 <?php
   echo "<div style='clear: left;'></div>";
   echo "<div class='menu'>";
-  echo "<p class='balance'>";
+  echo "<p class='balance' id='balance'>";
   echo "<b>Available balance:</b><br>";
   echo number_format($availableBalance / 100, 2), " TLO<br>";
   echo "<b>Locked balance:</b><br>";
@@ -22,4 +22,36 @@
   $dt = date("Y");
   echo "<p class='footer'>&copy; ", $dt != "2018" ? "2018&ndash;" : "", date("Y"), " Talleo Project</p>";
   echo "</div>";
+  echo "<script type='text/javascript'>
+  function updateBalance() {
+    fetch('api/balance.php')
+      .then((response) => response.text())
+      .then((text) => {
+        document.getElementById('balance').innerHTML = text;
+      })
+      .catch(function (err) {
+      });
+  }
+  setInterval(updateBalance, 5000);
+
+  function updateSyncStatus() {
+    fetch('api/syncstatus.php')
+      .then((response) => response.text())
+      .then((text) => {
+        var status = JSON.parse(text);
+        var el = document.getElementById('sync');
+        el.value = status['count'];
+        el.max = status['known'];
+        var percent = (status['count'] / status['known'] * 100).toFixed(2);
+        el.title = percent + ' %';
+      })
+      .catch(function (err) {
+        var el = document.getElementById('sync');
+        el.value = 0;
+        el.title = '0.00 %';
+      });
+  }
+  setInterval(updateSyncStatus, 5000);
+  </script>
+  ";
 ?>

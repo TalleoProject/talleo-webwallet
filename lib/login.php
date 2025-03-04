@@ -101,7 +101,7 @@ if (!logged_in() && !isset($_POST['spendKey'])) {
   echo "</form>";
   echo "<hr>";
   echo "If you don't have an account yet, you can register using your e-mail address.<br>";
-  echo "<span class='error'>NOTE: Some e-mail providers, including Google Mail and Hotmail/Outlook/Live might block, or mark as spam, e-mails sent from websites.</span><br><br>";
+  echo "<span class='error'><div style='display:inline-block;vertical-align:top;'>NOTE:</div> <div style='display:inline-block;'>Some e-mail providers, including Google Mail and Hotmail/Outlook/Live might block, or mark as spam, e-mails sent from websites.<br>Comcast is currently blocking all e-mails.</div></span><br><br>";
   echo "<a href='register.php' class='btn'>Register an account</a><br>";
 }
 ?>

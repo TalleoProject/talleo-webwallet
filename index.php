@@ -1,6 +1,8 @@
+<?php ob_start(); ?>
 <html>
 <head>
 <title>Talleo webwallet</title>
+<meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -109,6 +111,7 @@ if (logged_in()) {
     $txhashes = walletrpc_post("getTransactionHashes", $txhashes_params);
     $blocks = $txhashes["items"];
     echo "<h2>Transactions</h2>";
+    echo "<div id='transactions'>";
     echo "<div class='hscroll'>";
     echo "<table id='transactions'>";
     echo "<tr><th>State</th><th>Hash</th><th>Time</th><th>Amount</th><th>Payment ID</th></tr>";
@@ -117,6 +120,7 @@ if (logged_in()) {
     if ($skip < 0) {
       $skip = 0;
     }
+    unset($firstTime);
     // List transactions in reverse order, from newest to oldest
     for ($i = count($blocks) - 1; $i >= 0; $i--) {
       $block = $blocks[$i];
@@ -129,6 +133,9 @@ if (logged_in()) {
           $transaction = $tx["transaction"];
           if ($transaction["amount"] != 0) {
             if ($ntrans >= $skip && $ntrans < $skip + 20) {
+              if ($skip != 0 && !isset($firstTime)) {
+                $firstTime = $transaction['timestamp'];
+              }
               echo "<tr>";
               echo "<td>" . $WalletTransactionState[$transaction["state"]] . "</td>";
               echo "<td><a href='?hash=" . $transaction["transactionHash"] . "'>" . $transaction["transactionHash"] . "</a></td>";
@@ -169,6 +176,25 @@ if (logged_in()) {
     echo "</tr>";
     echo "</table>";
   }
+  echo "</div>";
+  echo "<script type='text/javascript'>
+  function updateTransactions() {
+    fetch('api/transactions.php";
+  if ($skip != 0 && isset($firstTime)) {
+    echo "?timestamp=".$firstTime;
+  }
+  echo "')
+      .then((response) => response.text())
+      .then((text) => {
+        document.getElementById('transactions').innerHTML = text;
+      })
+      .catch(function (err) {
+      });
+  }
+  setInterval(updateTransactions, 60000);
+  </script>
+  ";
+
   echo "</div>";
 }
 ?>

@@ -61,6 +61,10 @@ function validate_email($email) {
   if ($at == (strlen($email) - 1)) {
     return false;
   }
+  // Comcast will reject ell e-mails from Hetzner IP address space
+  if (strpos($email, '@comcast.net') !== false) {
+    return false;
+  }
   $user = substr($email, 0, $at);
   $domain = substr($email, $at + 1);
   for ($i = 0; $i < strlen($user); $i++) {

@@ -20,4 +20,4 @@ jobs:
           extensions: gd, gettext, curl
 
       - name: Lint
-        run: php -l *.php lib/*.php mobile/*.php
+        run: php -l *.php api/*.php lib/*.php mobile/*.php
