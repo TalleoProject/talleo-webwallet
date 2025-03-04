@@ -10,7 +10,7 @@ function validate_address($address) {
     return false;
   }
   for ($i = 2; $i < 97; $i++) {
-    if (strpos($valid, $address{$i}) === false) {
+    if (strpos($valid, $address[$i]) === false) {
       return false;
     }
   }
@@ -23,7 +23,7 @@ function validate_hex($str, $len) {
     return false;
   }
   for ($i = 0; $i < $len; $i++) {
-    if (stripos($valid, $str{$i}) === false) {
+    if (stripos($valid, $str[$i]) === false) {
       return false;
     }
   }
@@ -64,7 +64,7 @@ function validate_email($email) {
   $user = substr($email, 0, $at);
   $domain = substr($email, $at + 1);
   for ($i = 0; $i < strlen($user); $i++) {
-    if (strpos($valid1, $user{$i}) === false) {
+    if (strpos($valid1, $user[$i]) === false) {
       return false;
     }
   }
@@ -102,7 +102,7 @@ function validate_email($email) {
     }
   }
   for ($i = 0; $i < strlen($domain); $i++) {
-    if (strpos($valid2, $domain{$i}) === false) {
+    if (strpos($valid2, $domain[$i]) === false) {
       return false;
     }
   }
@@ -112,7 +112,7 @@ function validate_email($email) {
 function validate_int($amount) {
   $valid = "0123456789";
   for ($i = 0; $i < strlen($amount); $i++) {
-    if (strpos($valid, $amount{$i}) === false) {
+    if (strpos($valid, $amount[$i]) === false) {
       return false;
     }
   }
@@ -132,12 +132,12 @@ function validate_amount($amount) {
     return false;
   }
   for ($i = 0; $i < $dot; $i++) {
-    if (strpos($valid, $amount{$i}) === false) {
+    if (strpos($valid, $amount[$i]) === false) {
       return false;
     }
   }
   for ($i = $dot + 1; $i < strlen($amount); $i++) {
-    if (strpos($valid, $amount{$i}) === false) {
+    if (strpos($valid, $amount[$i]) === false) {
       return false;
     }
   }
@@ -158,7 +158,7 @@ function validate_contact_name($name) {
     return false;
   }
   for ($i = 0; $i < strlen($name); $i++) {
-    if (ord($name{$i}) < 32) {
+    if (ord($name[$i]) < 32) {
       return false;
     }
   }
