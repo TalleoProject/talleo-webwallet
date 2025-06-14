@@ -45,8 +45,8 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance["availableBalance"];
-  $lockedBalance = $getBalance["lockedAmount"];
+  $availableBalance = array_key_exists("availableBalance", $getBalance) ? $getBalance["availableBalance"] : 0;
+  $lockedBalance = array_key_exists("lockedAmount", $getBalance) ? $getBalance["lockedAmount"] : 0;
   $getStatus = walletrpc_post("getStatus");
   $blockCount = $getStatus["blockCount"];
   $knownBlockCount = $getStatus["knownBlockCount"];
@@ -166,7 +166,7 @@ if (logged_in()) {
   if (array_key_exists('totalOutputCount', $result)) {
     echo $result["totalOutputCount"], " output(s) found in wallet.<br>";
   }
-  if ($result["fusionReadyCount"] > 0) {
+  if (array_key_exists('fusionReadyCount', $result) && $result["fusionReadyCount"] > 0) {
     echo "<form action='info.php' method='post'>";
     echo "<input type='hidden' name='threshold' value='", $threshold, "'>";
     echo "<input type='submit' name='optimize' class='btn' value='Optimize wallet'>";

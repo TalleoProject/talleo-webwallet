@@ -45,8 +45,8 @@ if (logged_in()) {
   $params = Array();
   $params['address'] = $address;
   $getBalance = walletrpc_post("getBalance", $params);
-  $availableBalance = $getBalance["availableBalance"];
-  $lockedBalance = $getBalance["lockedAmount"];
+  $availableBalance = array_key_exists("availableBalance", $getBalance) ? $getBalance["availableBalance"] : 0;
+  $lockedBalance = array_key_exists("lockedAmount", $getBalance) ? $getBalance["lockedAmount"] : 0;
   $getStatus = walletrpc_post("getStatus");
   $blockCount = $getStatus["blockCount"];
   $knownBlockCount = $getStatus["knownBlockCount"];
